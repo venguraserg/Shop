@@ -139,7 +139,10 @@ namespace AppUI
                             break;
 
 
-                        default:
+                        default://incorrect input
+                            Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
+                            Console.ReadKey();
+                            Console.Clear();
                             break;
                     }
 
@@ -299,7 +302,7 @@ namespace AppUI
                             
                         //Просмотреть список покупателей
                         case 2:
-                            //$$$$$
+                            
                             Console.Clear();
                             var buyerCount = buyerService.GetNumbOfItemBuyer();
                             var numbersOfItem = 5;
@@ -384,16 +387,20 @@ namespace AppUI
                             break;
                     }
                     break;
+                //ИЗМЕНИТЬ
                 case 3:
-
+                
                     break;
+                //УДАЛИТЬ
                 case 4:
 
                     break;
+                //LOGOUT
                 case 5:
                     UserVM.Id = Guid.Empty;
                     UserVM.Role = null;
                     break;
+                //QUIT
                 case 6:
                     QuitApp();
                     break;
