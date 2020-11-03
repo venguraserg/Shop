@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppBLL.VMs
 {
-    public class BuyerVM
+    public class BuyerVM : BaseVMmodel
     {
-        public Guid Id { get; set; }
+        //public Guid Id { get; set; }
         public string Login { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }

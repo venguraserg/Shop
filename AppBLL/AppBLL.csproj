@@ -65,6 +65,7 @@
     <Compile Include="Services\ShopCartService.cs" />
     <Compile Include="Services\ShopService.cs" />
     <Compile Include="Services\UnitService.cs" />
+    <Compile Include="VMs\BaseVMmodel.cs" />
     <Compile Include="VMs\BuyerVM.cs" />
     <Compile Include="VMs\ManagerVM.cs" />
     <Compile Include="VMs\ProductVM.cs" />

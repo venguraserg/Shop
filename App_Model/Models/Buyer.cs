@@ -9,7 +9,7 @@ namespace App_Model.Models
     [Table("Buyer")]
     public partial class Buyer
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        
         public Buyer()
         {
             Id = Guid.NewGuid();
