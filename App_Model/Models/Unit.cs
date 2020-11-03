@@ -20,7 +20,7 @@ namespace App_Model.Models
 
         [Column("Unit")]
         [StringLength(5)]
-        public string Unit1 { get; set; }
+        public string Name { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Product> Product { get; set; }

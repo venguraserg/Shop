@@ -1,4 +1,5 @@
-﻿using AppBLL.Interfaces;
+﻿using App_Model.Models;
+using AppBLL.Interfaces;
 using AppBLL.VMs;
 using AppDAL;
 using System;
@@ -16,6 +17,22 @@ namespace AppBLL.Services
         {
             db = new MyShopDbContext();
         }
+        public void AddManager(string login, string passHash, string name, string surname, string phonenumber, Guid shopId)
+        {
+            var new_manager = new Manager()
+            {
+                Login = login,
+                PasswordHash = passHash,
+                Name = name,
+                Surname = surname,
+                PhoneNumber = phonenumber,
+                ShopId = shopId
+
+            };
+            db.Manager.Add(new_manager);
+            db.SaveChanges();
+        }
+
 
         public bool LogInManager(string username, string passwordHash)
         {

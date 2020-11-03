@@ -16,6 +16,7 @@ namespace AppUI
         static IShopService shopService = new ShopService();
         static IBuyerService buyerService = new BuyerService();
         static IManagerService managerService = new ManagerService();
+        static IUnitService unitService = new UnitService();
 
 
 
@@ -209,26 +210,30 @@ namespace AppUI
                                       "1.2 => Зарегистрировать покупателя\n" +
                                       "1.3 => Добавить магазин\n" +
                                       "1.4 => Добавить продукт\n" +
-                                      "1.5 => Вернутся назад\n");
+                                      "1.5 => Добавить единицы измерения\n" +
+                                      "1.6 => Вернутся назад\n");
                     if (!int.TryParse(Console.ReadLine(), out key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
                     switch (key)
                     {
                         //1.1 Регистрация нового менеджера
                         case 1:
-                            //Console.Clear();
-                            //Console.WriteLine("Пожалуйста данные нового менеджера:        ");
-                            //Console.WriteLine("===========================================");
-                            //Console.Write("Login:  ");
-                            //var temp_login = Console.ReadLine();
-                            //Console.Write("\nPassword:  ");
-                            //var temp_password = Console.ReadLine().GetHashCode().ToString();
-                            //Console.Write("\nИмя:  ");
-                            //var temp_name = Console.ReadLine();
-                            //Console.Write("\nФамилия:  ");
-                            //var temp_surname = Console.ReadLine();
-                            //Console.Write("\nНомер телефона:  ");
-                            //var temp_phonenumb = Console.ReadLine();
-                            
+                            Console.Clear();
+                            Console.WriteLine("Пожалуйста данные нового менеджера:        ");
+                            Console.WriteLine("===========================================");
+                            Console.Write("Login:  ");
+                            var temp_login = Console.ReadLine();
+                            Console.Write("\nPassword:  ");
+                            var temp_password = Console.ReadLine().GetHashCode().ToString();
+                            Console.Write("\nИмя:  ");
+                            var temp_name = Console.ReadLine();
+                            Console.Write("\nФамилия:  ");
+                            var temp_surname = Console.ReadLine();
+                            Console.Write("\nНомер телефона:  ");
+                            var temp_phonenumb = Console.ReadLine();
+                            var temp_Id = ShopView(true);
+                            managerService.AddManager(temp_login, temp_password, temp_name, temp_surname, temp_phonenumb, temp_Id);
+                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+                            Console.ReadKey();
                             break;
                         //1.2.Регистрация нового покупателя
                         case 2:
@@ -263,8 +268,19 @@ namespace AppUI
                             //Console.Write("\nНомер телефона:  ");
                             //var temp_phonenumb = Console.ReadLine();
                             break;
-                        //1.5.Back
+                        //1.5.Добавить единицу измерения
                         case 5:
+                            Console.Clear();
+                            Console.WriteLine("Пожалуйста внесите новую единицу измерения:");
+                            Console.WriteLine("===========================================");
+                            Console.Write("Наименование:  ");
+                            var temp_new_unit = Console.ReadLine();
+                            unitService.AddUnit(temp_new_unit);
+                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+                            Console.ReadKey();
+                            break;
+                        //1.5.Back
+                        case 6:
                             break;
                         default://incorrect input
                             Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
@@ -429,7 +445,6 @@ namespace AppUI
                 Console.WriteLine("Продолжим...");
             }
         }
-
         static void AddBuyer()
         {
             Console.Clear();
@@ -455,7 +470,57 @@ namespace AppUI
             Console.ReadKey();
 
         }
+        static Guid ShopView(bool mode)
+        {
+            Console.Clear();
+            var shopCount = shopService.GetNumbOfItemShop();
+            var numbersOfItem = 10;
+            var temp_Id = Guid.Empty;
+            //if (shopCount >= numbersOfItem)
+            //{
+            do
+            {
+                for (var i = 0; i < shopCount; i += numbersOfItem)
+                {
+                    var ListShops = shopService.GetPageShopInfo(i, numbersOfItem);
+                    Console.Clear();
+                    Console.WriteLine($"Список магазинов. Страница {1 + i / numbersOfItem}");
+                    for (var j = 0; j < ListShops.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListShops[j]}");
+                    }
+                    if (mode)
+                    {
+                        Console.WriteLine("Выберите номер магазина или нажмите ENTER для перехода к следующей странице");
+                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (key >= 1 && key <= ListShops.Count())
+                        {
+                            temp_Id = ListShops[key - 1].Id;
+                            return temp_Id;
+                        }
 
+                    }
+                    else
+                    {
+                        Console.WriteLine("next page...");
+                        Console.ReadKey();
+                    }
+
+                }
+            } while (mode==true && (temp_Id!=null));
+            return Guid.Empty;
+            //}
+            //else
+            //{
+            //    var ListShops = shopService.GetPageShopInfo(0, shopCount);
+            //    for (var i = 0; i < ListShops.Count(); i++)
+            //    {
+            //        Console.WriteLine($"{i + 1} -> {ListShops[i]}");
+            //    }
+            //}
+            //Console.WriteLine("Для продолжения нажмите любую клавишу ...");
+            //Console.ReadKey();
+        }
         
 
 
