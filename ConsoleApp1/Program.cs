@@ -312,74 +312,23 @@ namespace AppUI
                     {
                         //Просмотреть список менеджеров
                         case 1:
-                            Console.Clear();
-                            Console.WriteLine("Список Менеджеров");
-                            var ListManagers = managerService.GetAllManagersInfo();
-                            for (var i = 0; i < ListManagers.Count(); i++)
-                            {
-                                Console.WriteLine($"{i} -> {ListManagers[i]}");
-                            }
-                            Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+                            ManagerView(false);
                             break;
-                            
                         //Просмотреть список покупателей
                         case 2:
-                            
-                            Console.Clear();
-                            var buyerCount = buyerService.GetNumbOfItemBuyer();
-                            var numbersOfItem = 5;
-                            if (buyerCount >= numbersOfItem)
-                            {
-
-                                for (var i = 0; i < buyerCount; i += numbersOfItem)
-                                {
-                                    var ListShops = buyerService.GetPageBuyersInfo(i, numbersOfItem);
-                                    Console.Clear();
-                                    Console.WriteLine($"Список магазинов. Страница {1 + i / numbersOfItem}");
-                                    for (var j = 0; j < ListShops.Count(); j++)
-                                    {
-                                        Console.WriteLine($"{j + 1} -> {ListShops[j]}");
-                                    }
-                                    Console.WriteLine("next page...");
-                                    Console.ReadKey();
-                                }
-                            }
-                            else
-                            {
-                                var ListShops = buyerService.GetPageBuyersInfo(0, buyerCount);
-                                for (var i = 0; i < ListShops.Count(); i++)
-                                {
-                                    Console.WriteLine($"{i + 1} -> {ListShops[i]}");
-                                }
-                            }
-                            Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+                            BuyerView(false);
                             break;
-
-
-
                         //Просмотреть список магазинов
                         case 3:
-                            
                             ShopView(false);
-
                             break;
                         //Просмотреть список продуктов
                         case 4:
                             ProductView(false);
-
-
-                            Console.Clear();
-
-                            Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
                             break;
+                        //Назад
                         case 5:
-                            Console.Clear();
-
-                            Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+                            
                             break;
                         default://incorrect input
                             Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
@@ -394,7 +343,31 @@ namespace AppUI
                     break;
                 //УДАЛИТЬ
                 case 4:
-
+                    Console.Clear();
+                    Console.WriteLine("Пожалуйста выбеите пункт МЕНЮ              ");
+                    Console.WriteLine("===========================================");
+                    Console.WriteLine("4.1 => Удалить менеджера\n" +
+                                      "4.2 => Удалить покупателей\n" +
+                                      "4.3 => Удалить магазинов\n" +
+                                      "4.4 => Удалить продуктов\n" +
+                                      "4.5 => Вернутся назад\n");
+                    if (!int.TryParse(Console.ReadLine(), out key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                    switch (key)
+                    {
+                        case 1:
+                            managerService.DeleteManager(ManagerView(true));
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 //LOGOUT
                 case 5:
@@ -573,8 +546,85 @@ namespace AppUI
             return Guid.Empty;
 
         }
+        static Guid BuyerView(bool mode)
+        {
+            // Console.Clear();
+            var buyerCount = buyerService.GetNumbOfItem();
+            var numbersOfItem = 10;
+            var temp_Id = Guid.Empty;
+            do
+            {
+                for (var i = 0; i < buyerCount; i += numbersOfItem)
+                {
+                    var ListBuyer = buyerService.GetPageBuyerInfo(i, numbersOfItem);
+                    //Console.Clear();
+                    Console.WriteLine($"Список покупателей. Страница {1 + i / numbersOfItem}");
+                    for (var j = 0; j < ListBuyer.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListBuyer[j]}");
+                    }
+                    if (mode)
+                    {
+                        Console.WriteLine("Выберите номер или нажмите ENTER для перехода к следующей странице");
+                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (key >= 1 && key <= ListBuyer.Count())
+                        {
+                            temp_Id = ListBuyer[key - 1].Id;
+                            return temp_Id;
+                        }
 
-       
+                    }
+                    else
+                    {
+                        Console.WriteLine("next page...");
+                        Console.ReadKey();
+                    }
+
+                }
+            } while (mode == true && (temp_Id != null));
+            return Guid.Empty;
+
+        }
+
+        static Guid ManagerView(bool mode)
+        {
+            // Console.Clear();
+            var managerCount = managerService.GetNumbOfItem();
+            var numbersOfItem = 10;
+            var temp_Id = Guid.Empty;
+            do
+            {
+                for (var i = 0; i < managerCount; i += numbersOfItem)
+                {
+                    var ListManager = managerService.GetPageManagerInfo(i, numbersOfItem);
+                    //Console.Clear();
+                    Console.WriteLine($"Список покупателей. Страница {1 + i / numbersOfItem}");
+                    for (var j = 0; j < ListManager.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListManager[j]}");
+                    }
+                    if (mode)
+                    {
+                        Console.WriteLine("Выберите номер или нажмите ENTER для перехода к следующей странице");
+                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (key >= 1 && key <= ListManager.Count())
+                        {
+                            temp_Id = ListManager[key - 1].Id;
+                            return temp_Id;
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("next page...");
+                        Console.ReadKey();
+                    }
+
+                }
+            } while (mode == true && (temp_Id != null));
+            return Guid.Empty;
+
+        }
 
 
     }

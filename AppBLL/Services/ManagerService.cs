@@ -66,5 +66,47 @@ namespace AppBLL.Services
             }
             return managerVMs;
         }
+
+        public int GetNumbOfItem()
+        {
+            return db.Manager.Count();
+        }
+
+        public List<ManagerVM> GetPageManagerInfo(int start_items, int amount_items)
+        {
+            List<ManagerVM> managersVMs = new List<ManagerVM>();
+
+            var manager = db.Manager.OrderBy(p => p.Id)
+                                    .Skip(start_items)
+                                    .Take(amount_items)
+                                    .ToList();
+
+            for (var i = 0; i < manager.Count(); i++)
+            {
+                var item = new ManagerVM()
+                {
+                    Id = manager[i].Id,
+                    Login = manager[i].Login,
+                    Name = manager[i].Name,
+                    Surname = manager[i].Surname,
+                    PhoneNumber = manager[i].PhoneNumber,
+                    Shop = new ShopService().FindShop((Guid)manager[i].ShopId)
+
+                };
+                managersVMs.Add(item);
+
+            }
+            return managersVMs;
+
+        }
+        public void DeleteManager(Guid id)
+        {
+            var manager = db.Manager.Find(id);
+            if (manager == null) { return; }
+            db.Manager.Remove(manager);
+            db.SaveChanges();
+        }
+
+        
     }
 }

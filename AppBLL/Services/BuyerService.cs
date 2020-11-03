@@ -86,7 +86,7 @@ namespace AppBLL.Services
             }
             return buyerVMs;
         }
-        public List<BuyerVM> GetPageBuyersInfo(int start_items, int amount_items)
+        public List<BuyerVM> GetPageBuyerInfo(int start_items, int amount_items)
         {
             List<BuyerVM> buyerVMs = new List<BuyerVM>();
 
@@ -115,7 +115,7 @@ namespace AppBLL.Services
             return buyerVMs;
 
         }
-        public int GetNumbOfItemBuyer()
+        public int GetNumbOfItem()
         {
             return db.Buyer.Count();
         }

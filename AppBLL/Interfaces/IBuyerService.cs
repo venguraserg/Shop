@@ -12,8 +12,8 @@ namespace AppBLL.Interfaces
         void RegisterNewBuyer(string username, string passwordHash, string name, string surname, string phonenumber, string address, DateTime dateofbirth);
         bool LogInBuyer(string username, string passwordHash);
         List<BuyerVM> GetAllBuyersInfo();
-        List<BuyerVM> GetPageBuyersInfo(int start_items, int amount_items);
-        int GetNumbOfItemBuyer();
+        List<BuyerVM> GetPageBuyerInfo(int start_items, int amount_items);
+        int GetNumbOfItem();
         void DeleteBuyer(Guid id);
     }
 }
