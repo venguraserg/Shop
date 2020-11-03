@@ -17,6 +17,7 @@ namespace AppUI
         static IBuyerService buyerService = new BuyerService();
         static IManagerService managerService = new ManagerService();
         static IUnitService unitService = new UnitService();
+        static IProductService productService = new ProductService();
 
 
 
@@ -25,6 +26,7 @@ namespace AppUI
             Console.WriteLine("Добро пожаловать в ИНТЕРНЕТ МАГАЗИН");
             Console.WriteLine("===================================");
             Console.WriteLine("Для продолжения нажмите любую кнопку");
+            //Console.WriteLine("a".GetHashCode().ToString());
             Console.ReadKey();
             Console.Clear();
 
@@ -218,7 +220,7 @@ namespace AppUI
                         //1.1 Регистрация нового менеджера
                         case 1:
                             Console.Clear();
-                            Console.WriteLine("Пожалуйста данные нового менеджера:        ");
+                            Console.WriteLine("Пожалуйста внесите данные нового менеджера:        ");
                             Console.WriteLine("===========================================");
                             Console.Write("Login:  ");
                             var temp_login = Console.ReadLine();
@@ -254,19 +256,24 @@ namespace AppUI
                             break;
                         //1.4.Регистрация нового Продукта
                         case 4:
-                            //Console.Clear();
-                            //Console.WriteLine("Пожалуйста данные нового менеджера:        ");
-                            //Console.WriteLine("===========================================");
-                            //Console.Write("Login:  ");
-                            //var temp_login = Console.ReadLine();
-                            //Console.Write("\nPassword:  ");
-                            //var temp_password = Console.ReadLine().GetHashCode().ToString();
-                            //Console.Write("\nИмя:  ");
-                            //var temp_name = Console.ReadLine();
-                            //Console.Write("\nФамилия:  ");
-                            //var temp_surname = Console.ReadLine();
-                            //Console.Write("\nНомер телефона:  ");
-                            //var temp_phonenumb = Console.ReadLine();
+                            Console.Clear();
+                            Console.WriteLine("Пожалуйста внесите данные товара:        ");
+                            Console.WriteLine("===========================================");
+                            Console.Write("Наименование:  ");
+                            var temp_name_prod = Console.ReadLine();
+                            Console.Write("\nОписание:  ");
+                            var temp_descr_prod = Console.ReadLine();
+                            Console.Write("\nКоличество:  ");
+                            var temp_amount_prod = float.Parse(Console.ReadLine());
+                            Console.Write("\nЕдиницы измерения:  ");
+                            var temp_unit = UnitView(true);
+                            Console.Write("\nЦена:  ");
+                            var temp_price = decimal.Parse(Console.ReadLine());
+                            Console.Write("\nВыберите магазин:  ");
+                            var temp_Shop_Id = ShopView(true);
+                            productService.AddProduct(temp_name_prod, temp_descr_prod, temp_amount_prod, temp_price, temp_Shop_Id, temp_unit);
+                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+                            Console.ReadKey();
                             break;
                         //1.5.Добавить единицу измерения
                         case 5:
@@ -354,37 +361,15 @@ namespace AppUI
 
                         //Просмотреть список магазинов
                         case 3:
-                            Console.Clear();
-                            var shopCount = shopService.GetNumbOfItemShop();
-                            numbersOfItem = 15;
-                            if (shopCount >= numbersOfItem)
-                            {
-                                
-                                for(var i = 0; i < shopCount; i += numbersOfItem)
-                                {
-                                    var ListShops = shopService.GetPageShopInfo(i, numbersOfItem);
-                                    Console.Clear();
-                                    Console.WriteLine($"Список магазинов. Страница {1+i/numbersOfItem}");
-                                    for (var j = 0; j < ListShops.Count(); j++)
-                                    {
-                                        Console.WriteLine($"{j+1} -> {ListShops[j]}");
-                                    }
-                                    Console.WriteLine("next page...");
-                                    Console.ReadKey();
-                                }
-                            }
-                            else
-                            {
-                                var ListShops = shopService.GetPageShopInfo(0, shopCount);
-                                for (var i = 0; i < ListShops.Count(); i++)
-                                {
-                                    Console.WriteLine($"{i+1} -> {ListShops[i]}");
-                                }
-                            }
-                            Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+                            
+                            ShopView(false);
+
                             break;
+                        //Просмотреть список продуктов
                         case 4:
+                            ProductView(false);
+
+
                             Console.Clear();
 
                             Console.WriteLine("Для продолжения нажмите любую клавишу ...");
@@ -472,18 +457,16 @@ namespace AppUI
         }
         static Guid ShopView(bool mode)
         {
-            Console.Clear();
+            //Console.Clear();
             var shopCount = shopService.GetNumbOfItemShop();
             var numbersOfItem = 10;
             var temp_Id = Guid.Empty;
-            //if (shopCount >= numbersOfItem)
-            //{
             do
             {
                 for (var i = 0; i < shopCount; i += numbersOfItem)
                 {
                     var ListShops = shopService.GetPageShopInfo(i, numbersOfItem);
-                    Console.Clear();
+                    //Console.Clear();
                     Console.WriteLine($"Список магазинов. Страница {1 + i / numbersOfItem}");
                     for (var j = 0; j < ListShops.Count(); j++)
                     {
@@ -509,20 +492,89 @@ namespace AppUI
                 }
             } while (mode==true && (temp_Id!=null));
             return Guid.Empty;
-            //}
-            //else
-            //{
-            //    var ListShops = shopService.GetPageShopInfo(0, shopCount);
-            //    for (var i = 0; i < ListShops.Count(); i++)
-            //    {
-            //        Console.WriteLine($"{i + 1} -> {ListShops[i]}");
-            //    }
-            //}
-            //Console.WriteLine("Для продолжения нажмите любую клавишу ...");
-            //Console.ReadKey();
+            
         }
-        
+        static Guid UnitView(bool mode)
+        {
+           // Console.Clear();
+            var unitCount = unitService.GetNumbOfItem();
+            var numbersOfItem = 10;
+            var temp_Id = Guid.Empty;
+            do
+            {
+                for (var i = 0; i < unitCount; i += numbersOfItem)
+                {
+                    var ListUnit = unitService.GetPageUnitInfo(i, numbersOfItem);
+                    //Console.Clear();
+                    Console.WriteLine($"Список Ед.измерений. Страница {1 + i / numbersOfItem}");
+                    for (var j = 0; j < ListUnit.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListUnit[j]}");
+                    }
+                    if (mode)
+                    {
+                        Console.WriteLine("Выберите номер или нажмите ENTER для перехода к следующей странице");
+                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (key >= 1 && key <= ListUnit.Count())
+                        {
+                            temp_Id = ListUnit[key - 1].Id;
+                            return temp_Id;
+                        }
 
+                    }
+                    else
+                    {
+                        Console.WriteLine("next page...");
+                        Console.ReadKey();
+                    }
+
+                }
+            } while (mode == true && (temp_Id != null));
+            return Guid.Empty;
+
+        }
+
+        static Guid ProductView(bool mode)
+        {
+            // Console.Clear();
+            var productCount = productService.GetNumbOfItem();
+            var numbersOfItem = 10;
+            var temp_Id = Guid.Empty;
+            do
+            {
+                for (var i = 0; i < productCount; i += numbersOfItem)
+                {
+                    var ListProduct = productService.GetPageProductInfo(i, numbersOfItem);
+                    //Console.Clear();
+                    Console.WriteLine($"Список продуктов. Страница {1 + i / numbersOfItem}");
+                    for (var j = 0; j < ListProduct.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListProduct[j]}");
+                    }
+                    if (mode)
+                    {
+                        Console.WriteLine("Выберите номер или нажмите ENTER для перехода к следующей странице");
+                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (key >= 1 && key <= ListProduct.Count())
+                        {
+                            temp_Id = ListProduct[key - 1].Id;
+                            return temp_Id;
+                        }
+
+                    }
+                    else
+                    {
+                        Console.WriteLine("next page...");
+                        Console.ReadKey();
+                    }
+
+                }
+            } while (mode == true && (temp_Id != null));
+            return Guid.Empty;
+
+        }
+
+       
 
 
     }

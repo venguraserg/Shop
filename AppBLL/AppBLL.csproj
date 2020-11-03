@@ -54,18 +54,22 @@
     <Compile Include="Interfaces\IBuyerService.cs" />
     <Compile Include="Interfaces\IManagerService.cs" />
     <Compile Include="Interfaces\IOrderService.cs" />
+    <Compile Include="Interfaces\IProductService.cs" />
     <Compile Include="Interfaces\IShopCartService.cs" />
     <Compile Include="Interfaces\IShopService.cs" />
     <Compile Include="Interfaces\IUnitService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BuyerService.cs" />
     <Compile Include="Services\ManagerService.cs" />
+    <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\ShopCartService.cs" />
     <Compile Include="Services\ShopService.cs" />
     <Compile Include="Services\UnitService.cs" />
     <Compile Include="VMs\BuyerVM.cs" />
     <Compile Include="VMs\ManagerVM.cs" />
+    <Compile Include="VMs\ProductVM.cs" />
     <Compile Include="VMs\ShopVM.cs" />
+    <Compile Include="VMs\UnitVM.cs" />
     <Compile Include="VMs\UserVM.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -35,23 +35,7 @@ namespace AppBLL.Services
 
         }
 
-        public List<ShopVM> GetAllShopInfo()
-        {
-            List<ShopVM> shopVMs = new List<ShopVM>();
-            
-            var shops = (from t in db.Shop
-                          select t).ToList();
-
-            for (var i = 0; i < shops.Count(); i++)
-            {
-                var item = new ShopVM() {Id = shops[i].Id, Name = shops[i].Name, Description = shops[i].Discription };
-                shopVMs.Add(item);
-                
-            }
-            return shopVMs;
-            
-        }
-
+        
         public string FindShop(Guid Id)
         {
             var shop = db.Shop.Find(Id);
@@ -81,26 +65,6 @@ namespace AppBLL.Services
             }
             return shopVMs;
 
-        }
-
-
-        public Guid ChooiseOneFromListShop()
-        {
-            var shops = (from t in db.Shop
-                         select t).ToList();
-            for (var i = 0; i < shops.Count(); i++)
-            {
-                var items = shops.ElementAt(i);
-                Console.WriteLine($"{i}: {items}");
-                if(i%5==0)
-                {
-                    Console.WriteLine("Stop cicle");
-                    Console.ReadLine();
-
-                }
-            }
-            Console.WriteLine("End list");
-            return Guid.Empty;
         }
 
 
