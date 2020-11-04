@@ -314,7 +314,7 @@ namespace ConsoleApp1
                     switch (key)
                     {
                         case 1:
-                            //managerService.DeleteManager(ManagerView(true));
+                            //todo: managerService.DeleteManager(ManagerView(true));
                             break;
                         case 2:
                             break;
