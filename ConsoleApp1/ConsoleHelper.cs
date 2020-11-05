@@ -19,7 +19,7 @@ namespace ConsoleApp1
         static IProductService productService = new ProductService();
 
 
-
+        #region Метод авторизации
         public static void Authorization()
         {
             Console.Clear();
@@ -45,51 +45,23 @@ namespace ConsoleApp1
                     {
                         //login buyer
                         case 1:
-                            Console.Clear();
-                            Console.WriteLine("Приветствую ПОКУПТЕЛЬ, введите свой LOGIN:");
-                            string current_login = Console.ReadLine();
-                            Console.WriteLine("Ввведите свой ПАРОЛЬ:");
-                            string current_passwordHash = Console.ReadLine().GetHashCode().ToString();
-                            if (buyerService.LogInBuyer(current_login, current_passwordHash))
-                            {
-                                Console.WriteLine("Вход выполнен, нажмите любую клавишу...");
-                                Console.ReadKey();
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine("НЕ ВЕРНЫЙ ЛОГИН/ПАРОЛЬ, нажмите любую клавишу...");
-                                Console.ReadKey();
-                                break;
-                            }
-
+                            
+                            LogInUser("Покупатель", buyerService.LogInBuyer);
+                            break;
+                        
                         //login manager 
                         case 2:
-                            Console.Clear();
-                            Console.WriteLine("Приветствую МЕНЕДЖЕР, введите свой LOGIN:");
-                            current_login = Console.ReadLine();
-                            Console.WriteLine("Введите свой ПАРОЛЬ:");
-                            current_passwordHash = Console.ReadLine().GetHashCode().ToString();
-                            if (managerService.LogInManager(current_login, current_passwordHash))
-                            {
-                                Console.WriteLine("Вход выполнен, нажмите любую клавишу...");
-                                Console.ReadKey();
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine("НЕ ВЕРНЫЙ ЛОГИН/ПАРОЛЬ, нажмите любую клавишу...");
-                                Console.ReadKey();
-                                break;
-                            }
+
+                            LogInUser("Mенеджер", managerService.LogInManager);
+                            break;
 
                         //back
                         case 3:
                             Console.Clear();
                             break;
 
-
-                        default://incorrect input
+                        //incorrect input
+                        default:
                             Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
                             Console.ReadKey();
                             Console.Clear();
@@ -115,19 +87,103 @@ namespace ConsoleApp1
             }
 
         }
-        public static DateTime InputData()
-        {
-            DateTime data; // date 
-            string input;
-            do
-            {
-                Console.WriteLine("Введите дату в формате дд.ММ.гггг (день.месяц.год):");
-                input = Console.ReadLine();
-            }
-            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out data));
+        #endregion
 
-            return data;
+        #region Метод Работы с пользователем
+        public static void LogInUser(string role, Func<string,string,bool>LogInUser)
+        {
+            Console.Clear();
+            Console.WriteLine($"Приветствую {role}, введите свой LOGIN:");
+            var current_login = Console.ReadLine();
+            Console.WriteLine("Ввведите свой ПАРОЛЬ:");
+            var current_passwordHash = Console.ReadLine().GetHashCode().ToString();
+            if (LogInUser(current_login,current_passwordHash))
+            {
+                Console.WriteLine("Вход выполнен, нажмите любую клавишу...");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("НЕ ВЕРНЫЙ ЛОГИН/ПАРОЛЬ, нажмите любую клавишу...");
+                Console.ReadKey();
+            }
         }
+        public static void AddBuyer()
+        {
+            Console.Clear();
+            Console.WriteLine("Регистрация нового пользователя: ");
+            Console.Write("Введите ваш LOGIN: ");
+            string temp_login = Console.ReadLine();
+            Console.Write("\nВведите ваш ПАРОЛЬ: ");
+            string temp_passHash = Console.ReadLine().GetHashCode().ToString();
+            Console.Write("\nВведите ваше ИМЯ:");
+            string temp_name = Console.ReadLine();
+            Console.Write("\nВведите вашу ФАМИЛИЮ: ");
+            string temp_surname = Console.ReadLine();
+            Console.Write("\nВведите ваш НОМЕР ТЕЛЕФОНА: ");
+            string temp_numbtel = (Console.ReadLine());
+            Console.Write("\nВведите ваш АДРЕС: ");
+            string temp_address = Console.ReadLine();
+            Console.Write("\nВведите дату вашего рождения\n");
+            DateTime temp_date_of_birth = InputDate();
+
+            buyerService.RegisterNewBuyer(temp_login, temp_passHash, temp_name, temp_surname, temp_numbtel, temp_address, temp_date_of_birth);
+
+            Console.WriteLine($"\n{temp_name}, вы успешно зарегистрированы\nДля продолжения нажмите любую клавишу ... ");
+            Console.ReadKey();
+
+        }
+        public static void AddManager() 
+        {
+            Console.Clear();
+            Console.WriteLine("Пожалуйста внесите данные нового менеджера:        ");
+            Console.WriteLine("===========================================");
+            Console.Write("Login:  ");
+            var temp_login = Console.ReadLine();
+            Console.Write("\nPassword:  ");
+            var temp_password = Console.ReadLine().GetHashCode().ToString();
+            Console.Write("\nИмя:  ");
+            var temp_name = Console.ReadLine();
+            Console.Write("\nФамилия:  ");
+            var temp_surname = Console.ReadLine();
+            Console.Write("\nНомер телефона:  ");
+            var temp_phonenumb = Console.ReadLine();
+
+            //var temp_Id = ShopView(true);
+
+            var temp_id = OpenView<ShopVM>(shopService.GetPageShopInfo(0, 10), true, shopService.GetNumbOfItemShop(), 10);
+            if (temp_id.HasValue)
+            {
+
+                managerService.AddManager(temp_login, temp_password, temp_name, temp_surname, temp_phonenumb, temp_id.Value);
+            }
+
+
+
+
+
+            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+            Console.ReadKey();
+        }
+        #endregion
+
+        #region Методы работы с сущностями
+        public static void AddShop()
+        {
+            Console.Clear();
+            Console.WriteLine("Пожалуйста внесите данные нового магазина:        ");
+            Console.WriteLine("===========================================");
+            Console.Write("Наименование:  ");
+            var temp_name_shop = Console.ReadLine();
+            Console.Write("\nОписание:  ");
+            var temp_Discr_Shop = Console.ReadLine();
+            shopService.RegisterNewShop(temp_name_shop, temp_Discr_Shop);
+            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+            Console.ReadKey();
+        }
+        #endregion
+
+        #region Методы Меню
         public static void Menu_buyer()
         {
 
@@ -152,6 +208,7 @@ namespace ConsoleApp1
             {
                 //Меню - 1.Добавить
                 case 1:
+
                     Console.Clear();
                     Console.WriteLine("Пожалуйста выбеите пункт МЕНЮ              ");
                     Console.WriteLine("===========================================");
@@ -166,53 +223,22 @@ namespace ConsoleApp1
                     {
                         //1.1 Регистрация нового менеджера
                         case 1:
-                            Console.Clear();
-                            Console.WriteLine("Пожалуйста внесите данные нового менеджера:        ");
-                            Console.WriteLine("===========================================");
-                            Console.Write("Login:  ");
-                            var temp_login = Console.ReadLine();
-                            Console.Write("\nPassword:  ");
-                            var temp_password = Console.ReadLine().GetHashCode().ToString();
-                            Console.Write("\nИмя:  ");
-                            var temp_name = Console.ReadLine();
-                            Console.Write("\nФамилия:  ");
-                            var temp_surname = Console.ReadLine();
-                            Console.Write("\nНомер телефона:  ");
-                            var temp_phonenumb = Console.ReadLine();
 
-                            //var temp_Id = ShopView(true);
-
-                            var temp_id = OpenView<ShopVM>(shopService.GetPageShopInfo(0, 10), true, shopService.GetNumbOfItemShop(), 10);
-                            if (temp_id.HasValue) 
-                            {
-
-                                managerService.AddManager(temp_login, temp_password, temp_name, temp_surname, temp_phonenumb, temp_id.Value);
-                            }
-
-
-
-
-                            
-                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+                            AddManager();
                             break;
+
                         //1.2.Регистрация нового покупателя
                         case 2:
+
                             AddBuyer();
                             break;
+
                         //1.3.Регистрация нового магазина
                         case 3:
-                            Console.Clear();
-                            Console.WriteLine("Пожалуйста внесите данные нового магазина:        ");
-                            Console.WriteLine("===========================================");
-                            Console.Write("Наименование:  ");
-                            var temp_name_shop = Console.ReadLine();
-                            Console.Write("\nОписание:  ");
-                            var temp_Discr_Shop = Console.ReadLine();
-                            shopService.RegisterNewShop(temp_name_shop, temp_Discr_Shop);
-                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+
+                            AddShop();
                             break;
+
                         //1.4.Регистрация нового Продукта
                         case 4:
                             Console.Clear();
@@ -347,6 +373,25 @@ namespace ConsoleApp1
 
 
         }
+        #endregion
+
+
+
+
+        public static DateTime InputDate()
+        {
+            DateTime data; // date 
+            string input;
+            do
+            {
+                Console.WriteLine("Введите дату в формате дд.ММ.гггг (день.месяц.год):");
+                input = Console.ReadLine();
+            }
+            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out data));
+
+            return data;
+        }
+        
         public static void QuitApp()
         {
             Console.Clear();
@@ -362,31 +407,7 @@ namespace ConsoleApp1
                 Console.WriteLine("Продолжим...");
             }
         }
-        public static void AddBuyer()
-        {
-            Console.Clear();
-            Console.WriteLine("Регистрация нового пользователя: ");
-            Console.Write("Введите ваш LOGIN: ");
-            string temp_login = Console.ReadLine();
-            Console.Write("\nВведите ваш ПАРОЛЬ: ");
-            string temp_passHash = Console.ReadLine().GetHashCode().ToString();
-            Console.Write("\nВведите ваше ИМЯ:");
-            string temp_name = Console.ReadLine();
-            Console.Write("\nВведите вашу ФАМИЛИЮ: ");
-            string temp_surname = Console.ReadLine();
-            Console.Write("\nВведите ваш НОМЕР ТЕЛЕФОНА: ");
-            string temp_numbtel = (Console.ReadLine());
-            Console.Write("\nВведите ваш АДРЕС: ");
-            string temp_address = Console.ReadLine();
-            Console.Write("\nВведите дату вашего рождения\n");
-            DateTime temp_date_of_birth = InputData();
-
-            buyerService.RegisterNewBuyer(temp_login, temp_passHash, temp_name, temp_surname, temp_numbtel, temp_address, temp_date_of_birth);
-
-            Console.WriteLine($"\n{temp_name}, вы успешно зарегистрированы\nДля продолжения нажмите любую клавишу ... ");
-            Console.ReadKey();
-
-        }
+        
         public static Guid ShopView(bool mode)
         {
             //Console.Clear();
