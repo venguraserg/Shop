@@ -206,7 +206,7 @@ namespace ConsoleApp1
             if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
             switch (key)
             {
-                //Меню - 1.Добавить
+                // Меню - 1.Добавить
                 case 1:
 
                     Console.Clear();

@@ -1,13 +1,7 @@
-﻿using AppBLL.Interfaces;
-using AppBLL.Services;
-using AppBLL.VMs;
+﻿using AppBLL.VMs;
 using ConsoleApp1;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AppUI
 
@@ -37,7 +31,7 @@ namespace AppUI
                         Console.WriteLine($"Вы вошли как {UserVM.Role}");
                         do
                         {
-                            Console.ReadKey();
+                            ConsoleHelper.Menu_manager();
                         }
                         while (UserVM.Role == "manager");
                         
@@ -47,7 +41,7 @@ namespace AppUI
                         Console.WriteLine($"Вы вошли как {UserVM.Role}");
                         do
                         {
-                            Console.ReadKey();
+                            ConsoleHelper.Menu_buyer();
                         }
                         while (UserVM.Role == "buyer");
 
