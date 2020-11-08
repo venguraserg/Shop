@@ -19,7 +19,9 @@ namespace ConsoleApp1
         static IProductService productService = new ProductService();
 
 
-        #region Метод авторизации
+        /// <summary>
+        /// Метод Авторизации. Закончен
+        /// </summary>
         public static void Authorization()
         {
             Console.Clear();
@@ -72,7 +74,7 @@ namespace ConsoleApp1
                 //registration buyer
                 case 2:
 
-                    AddBuyer();
+                    AddBuyer(true);
 
                     break;
                 //quit
@@ -87,9 +89,13 @@ namespace ConsoleApp1
             }
 
         }
-        #endregion
+        
 
-        #region Метод Работы с пользователем
+        /// <summary>
+        /// Метод ЛОГИН для любого Юзера!! при помощи делегата Func
+        /// </summary>
+        /// <param name="role"></param>
+        /// <param name="LogInUser"></param>
         public static void LogInUser(string role, Func<string,string,bool>LogInUser)
         {
             Console.Clear();
@@ -108,12 +114,17 @@ namespace ConsoleApp1
                 Console.ReadKey();
             }
         }
-        public static void AddBuyer()
+
+        /// <summary>
+        /// Метод добавления покупателя . закончен
+        /// </summary>
+        public static void AddBuyer(bool mode)
         {
             Console.Clear();
             Console.WriteLine("Регистрация нового пользователя: ");
-            Console.Write("Введите ваш LOGIN: ");
-            string temp_login = Console.ReadLine();
+
+            var temp_login = CheckMatchUser(buyerService.SearchBuyer);
+
             Console.Write("\nВведите ваш ПАРОЛЬ: ");
             string temp_passHash = Console.ReadLine().GetHashCode().ToString();
             Console.Write("\nВведите ваше ИМЯ:");
@@ -127,19 +138,53 @@ namespace ConsoleApp1
             Console.Write("\nВведите дату вашего рождения\n");
             DateTime temp_date_of_birth = InputDate();
 
-            buyerService.RegisterNewBuyer(temp_login, temp_passHash, temp_name, temp_surname, temp_numbtel, temp_address, temp_date_of_birth);
+            buyerService.RegisterNewBuyer(temp_login, temp_passHash, temp_name, temp_surname, temp_numbtel, temp_address, temp_date_of_birth,mode);
 
-            Console.WriteLine($"\n{temp_name}, вы успешно зарегистрированы\nДля продолжения нажмите любую клавишу ... ");
+            Console.WriteLine($"\nПользователь {temp_name} успешно зарегистрирован\nДля продолжения нажмите любую клавишу ... ");
             Console.ReadKey();
 
         }
+        /// <summary>
+        /// Метод ввода логина с проверкой предидущей регистрации
+        /// </summary>
+        /// <param name="searchMethod"></param>
+        /// <returns></returns>
+        public static string CheckMatchUser(Func<string,bool>searchMethod) 
+        {
+            bool loginMatch;
+            string temp_login;
+            do
+            {
+                Console.Write("Введите ваш LOGIN: ");
+                temp_login = Console.ReadLine();
+                if (searchMethod(temp_login))
+                {
+                    loginMatch = false;
+                    Console.WriteLine("Пользователь с таким LOGIN существует...\n" +
+                                  "попробуйте другой LOGIN.\n" +
+                                  "для продолжения нажмите любую кнопку... ");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    loginMatch = true;
+                }
+            } while (!loginMatch);
+            return temp_login;
+
+        }
+
+
+        /// <summary>
+        /// Метод добавления Менеджера. Закончен
+        /// </summary>
         public static void AddManager() 
         {
             Console.Clear();
             Console.WriteLine("Пожалуйста внесите данные нового менеджера:        ");
             Console.WriteLine("===========================================");
             Console.Write("Login:  ");
-            var temp_login = Console.ReadLine();
+            var temp_login = CheckMatchUser(managerService.SearchManager);
             Console.Write("\nPassword:  ");
             var temp_password = Console.ReadLine().GetHashCode().ToString();
             Console.Write("\nИмя:  ");
@@ -149,25 +194,22 @@ namespace ConsoleApp1
             Console.Write("\nНомер телефона:  ");
             var temp_phonenumb = Console.ReadLine();
 
-            //var temp_Id = ShopView(true);
-
-            var temp_id = OpenView<ShopVM>(shopService.GetPageShopInfo(0, 10), true, shopService.GetNumbOfItemShop(), 10);
-            if (temp_id.HasValue)
+            Guid? temp_id;
+            do
             {
-
-                managerService.AddManager(temp_login, temp_password, temp_name, temp_surname, temp_phonenumb, temp_id.Value);
+                temp_id = EntityView<ShopVM>(shopService.GetPageShopInfo, true, shopService.GetNumbOfItemShop(), 10);
             }
+            while (!temp_id.HasValue) ;
 
-
-
+            managerService.AddManager(temp_login, temp_password, temp_name, temp_surname, temp_phonenumb, temp_id.Value);
 
 
             Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
             Console.ReadKey();
         }
-        #endregion
+        
 
-        #region Методы работы с сущностями
+        
         public static void AddShop()
         {
             Console.Clear();
@@ -181,16 +223,118 @@ namespace ConsoleApp1
             Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
             Console.ReadKey();
         }
-        #endregion
 
-        #region Методы Меню
+        public static void AddProduct()
+        {
+            Console.Clear();
+            Console.WriteLine("Пожалуйста внесите данные товара:");
+            Console.WriteLine("===========================================");
+            Console.Write("Наименование:  ");
+            var temp_name_prod = Console.ReadLine();
+            Console.Write("\nОписание:  ");
+            var temp_descr_prod = Console.ReadLine();
+            Console.Write("\nКоличество:  ");
+            var temp_amount_prod = float.Parse(Console.ReadLine());
+            Console.Write("\nЕдиницы измерения:  ");
+            Guid? temp_unit;
+            do
+            {
+                temp_unit = EntityView<UnitVM>(unitService.GetPageUnitInfo, true, unitService.GetNumbOfItem(), 10);
+            }
+            while (!temp_unit.HasValue);
+            
+            Console.Write("\nЦена:  ");
+            var temp_price = decimal.Parse(Console.ReadLine());
+            Console.Write("\nВыберите магазин:  ");
+            Guid? temp_id;
+            do
+            {
+                temp_id = EntityView<ShopVM>(shopService.GetPageShopInfo, true, shopService.GetNumbOfItemShop(), 10);
+            }
+            while (!temp_id.HasValue);
+            
+            productService.AddProduct(temp_name_prod, temp_descr_prod, temp_amount_prod, temp_price, temp_id.Value, temp_unit.Value);
+            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
+            Console.ReadKey();
+        }
+       
+
+        
         public static void Menu_buyer()
         {
+            Console.Clear();
+            Console.WriteLine($"{UserVM.Role} пожалуйста выбеите пункт МЕНЮ");
+            Console.WriteLine("===========================================");
+            Console.WriteLine("1 => -----\n" +
+                              "2 => -----\n" +
+                              "5 => Выйти из аккаунта\n" +
+                              "6 => Выйти из программы");
+            if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+            switch (key)
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    UserVM.Id = Guid.Empty;
+                    UserVM.Role = null;
+                    break;
+                //QUIT
+                case 6:
+                    QuitApp();
+                    break;
+                //incorrect input
+                default:
+                    Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+            }
 
         }
         public static void Menu_manager()
         {
+            Console.Clear();
+            Console.WriteLine($"{UserVM.Role} пожалуйста выбеите пункт МЕНЮ");
+            Console.WriteLine("===========================================");
+            Console.WriteLine("1 => Добавить новый продукт в каталог\n" +
+                              "2 => -----\n" +
+                              "5 => Выйти из аккаунта\n" +
+                              "6 => Выйти из программы");
+            if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+            switch (key)
+            {
+                case 1:
 
+                    AddProduct();
+
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    UserVM.Id = Guid.Empty;
+                    UserVM.Role = null;
+                    break;
+                //QUIT
+                case 6:
+                    QuitApp();
+                    break;
+                //incorrect input
+                default:
+                    Console.WriteLine("------НЕКОРРЕКТНЫЙ ВВОД, НАЖМИТЕ ЛЮБУЮ КЛАВИШУ-----");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+            }
         }
         public static void Menu_admin()
         {
@@ -230,7 +374,7 @@ namespace ConsoleApp1
                         //1.2.Регистрация нового покупателя
                         case 2:
 
-                            AddBuyer();
+                            AddBuyer(false);
                             break;
 
                         //1.3.Регистрация нового магазина
@@ -241,25 +385,10 @@ namespace ConsoleApp1
 
                         //1.4.Регистрация нового Продукта
                         case 4:
-                            Console.Clear();
-                            Console.WriteLine("Пожалуйста внесите данные товара:        ");
-                            Console.WriteLine("===========================================");
-                            Console.Write("Наименование:  ");
-                            var temp_name_prod = Console.ReadLine();
-                            Console.Write("\nОписание:  ");
-                            var temp_descr_prod = Console.ReadLine();
-                            Console.Write("\nКоличество:  ");
-                            var temp_amount_prod = float.Parse(Console.ReadLine());
-                            Console.Write("\nЕдиницы измерения:  ");
-                            var temp_unit = UnitView(true);
-                            Console.Write("\nЦена:  ");
-                            var temp_price = decimal.Parse(Console.ReadLine());
-                            Console.Write("\nВыберите магазин:  ");
-                            var temp_Shop_Id = ShopView(true);
-                            productService.AddProduct(temp_name_prod, temp_descr_prod, temp_amount_prod, temp_price, temp_Shop_Id, temp_unit);
-                            Console.Write("\nДанные внесены успешно, для продолжения нажмите любую клавишу ...");
-                            Console.ReadKey();
+
+                            AddProduct();
                             break;
+
                         //1.5.Добавить единицу измерения
                         case 5:
                             Console.Clear();
@@ -297,19 +426,21 @@ namespace ConsoleApp1
                     {
                         //Просмотреть список менеджеров
                         case 1:
-                            ManagerView(false);
+
+                            EntityView<ManagerVM>(managerService.GetPageManagerInfo, false, managerService.GetNumbOfItem(), 10);
                             break;
                         //Просмотреть список покупателей
                         case 2:
-                            BuyerView(false);
+                            EntityView<BuyerVM>(buyerService.GetPageBuyerInfo, false, buyerService.GetNumbOfItem(), 10);
                             break;
                         //Просмотреть список магазинов
                         case 3:
-                            ShopView(false);
+
+                            EntityView<ShopVM>(shopService.GetPageShopInfo, false, shopService.GetNumbOfItemShop(), 10);
                             break;
                         //Просмотреть список продуктов
                         case 4:
-                            ProductView(false);
+                            EntityView<ProductVM>(productService.GetPageProductInfo, false, productService.GetNumbOfItem(), 10);
                             break;
                         //Назад
                         case 5:
@@ -373,25 +504,38 @@ namespace ConsoleApp1
 
 
         }
-        #endregion
+        
 
 
 
-
+        /// <summary>
+        /// Метод корректного ввода даты с проверкой Диапазона
+        /// </summary>
+        /// <returns></returns>
         public static DateTime InputDate()
         {
             DateTime data; // date 
             string input;
+            bool result;
             do
             {
                 Console.WriteLine("Введите дату в формате дд.ММ.гггг (день.месяц.год):");
                 input = Console.ReadLine();
+                result = DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out data);
+                if (data > DateTime.Now || data.Year < 1930)
+                {
+                    result = false;
+                    Console.WriteLine("Не верно введена дата, повторите ввод");
+                }
             }
-            while (!DateTime.TryParseExact(input, "dd.MM.yyyy", null, DateTimeStyles.None, out data));
+            while (!result);
 
             return data;
         }
         
+        /// <summary>
+        /// Метод выход из приложения. Закончен
+        /// </summary>
         public static void QuitApp()
         {
             Console.Clear();
@@ -606,43 +750,131 @@ namespace ConsoleApp1
 
         }
 
-        public static Guid? OpenView<T>(List<T> list, bool mode, int totalCount, int numbersOfItem = 10) where T:BaseVMmodel
+        
+
+
+        public static Guid? EntityView<T>(Func<int,int,List<T>>list, bool mode, int totalCount, int numbersOfItem = 10) where T : BaseVMmodel
         {
+            var numberPages = (int)Math.Ceiling((double)totalCount / numbersOfItem);
+            bool resultParse;
 
-
-            var temp_Id = Guid.Empty;
-            do
+            Console.Clear();
+            Console.WriteLine($"Список состоит из {numberPages} страниц по {numbersOfItem} строк");
+            if (numberPages <= 1)
             {
-                for (var i = 0; i < totalCount; i += numbersOfItem)
-                {
+                var ListShops = list(0, numbersOfItem);
 
-                    Console.WriteLine($"Список покупателей. Страница {1 + i / numbersOfItem}");
-                    for (var j = 0; j < list.Count(); j++)
+                for (var j = 0; j < ListShops.Count(); j++)
+                {
+                    Console.WriteLine($"{j + 1} -> {ListShops[j]}");
+                }
+                if (mode) 
+                {
+                    int numbItem;
+                    do
                     {
-                        Console.WriteLine($"{j + 1} -> {list[j]}");
-                    }
-                    if (mode)
-                    {
-                        Console.WriteLine("Выберите номер или нажмите ENTER для перехода к следующей странице");
-                        if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
-                        if (key >= 1 && key <= list.Count())
+                        Console.Write("Выберите номер из списка:");
+                        resultParse = int.TryParse(Console.ReadLine(), out numbItem);
+                        if (!resultParse || numbItem < 1 || numbItem > ListShops.Count())
                         {
-                            temp_Id = list[key - 1].Id;
-                            return temp_Id;
+                            Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                            resultParse = false;
                         }
 
-                    }
-                    else
+                    } while (!resultParse);
+
+                    return ListShops[numbItem - 1].Id;
+                }
+                else
+                {
+                    Console.Write("Что бы вернутся нажмите любую кнопку");
+                    Console.ReadKey();
+                }
+            }
+            //Когда много страниц
+            else
+            {
+                int watchOfChoose;
+                do
+                {
+                   
+                    int page;
+
+                    do
                     {
-                        Console.WriteLine("next page...");
-                        Console.ReadKey();
+                        Console.Write($"Введите номер страницы...(1-{numberPages})"); 
+                        if(!mode)Console.Write(" (0 - выйти из просмотра)");
+                        resultParse = int.TryParse(Console.ReadLine(), out page);
+                        if (!resultParse || page < 0 || page > numberPages)
+                        {
+                            Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                            resultParse = false;
+                        }
+
+                    } while (!resultParse);
+                    if (page == 0) return null;
+
+                    var ListShops = list((page - 1) * numbersOfItem, numbersOfItem);
+                    Console.Clear();
+                    for (var j = 0; j < ListShops.Count(); j++)
+                    {
+                        Console.WriteLine($"{j + 1} -> {ListShops[j]}");
                     }
 
-                }
-            } while (mode == true && (temp_Id != null));
+                    do
+                    {
+                        Console.WriteLine("1 - посмотреть еще.");
+                        if (mode) Console.WriteLine("2 - Выбрать из списка");
+                        if (!mode) Console.WriteLine("0 - выйти из просмотра:");
+
+                                               
+                        resultParse = int.TryParse(Console.ReadLine(), out watchOfChoose);
+                        if (mode)
+                        {
+                            if (!resultParse || watchOfChoose > 2 || watchOfChoose < 0)
+                            {
+                                Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                                resultParse = false;
+                            }
+                        }
+                        else
+                        {
+                            if (!resultParse || watchOfChoose > 1 || watchOfChoose < 0)
+                            {
+                                Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                                resultParse = false;
+                            }
+
+                        }
+                        
+                    } while (!resultParse);
+
+                    if (watchOfChoose == 2) 
+                    {
+                        int numbItem;
+                        do
+                        {
+                            Console.Write("Выберите номер из списка:");
+                            resultParse = int.TryParse(Console.ReadLine(), out numbItem);
+                            if (!resultParse || numbItem < 1 || numbItem > ListShops.Count())
+                            {
+                                Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                                resultParse = false;
+                            }
+
+                        } while (!resultParse);
+
+                        return ListShops[numbItem - 1].Id;
+
+                    }
+
+                } while (watchOfChoose!=0);
+            }
             return null;
 
         }
+
+
 
 
     }

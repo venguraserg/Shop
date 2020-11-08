@@ -42,6 +42,23 @@ namespace AppBLL.Services
             UserVM.Role = user.Single().Role;
             return true;
         }
+        /// <summary>
+        /// Поиск совпадения по Логину. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>TRUE - Совпадение</returns>
+        public bool SearchManager(string username)
+        {
+            var loginList = (from t in db.Manager
+                             select t.Login).ToList();
+            foreach (var i in loginList)
+            {
+                if (i == username) { return true; }
+
+            }
+            return false;
+
+        }
 
         public List<ManagerVM> GetAllManagersInfo()
         {

@@ -52,7 +52,7 @@ namespace AppBLL.Services
         {
             List<ShopVM> shopVMs = new List<ShopVM>();
 
-            var shops = db.Shop.OrderBy(p => p.Id)
+            var shops = db.Shop.OrderBy(p => p.Name)
                                .Skip(start_items)
                                .Take(amount_items)
                                .ToList();

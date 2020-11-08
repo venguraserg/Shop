@@ -35,7 +35,7 @@ namespace AppBLL.Services
 
         }
 
-        public void RegisterNewBuyer(string username, string passwordHash, string name, string surname, string phonenumber, string address, DateTime dateofbirth)
+        public void RegisterNewBuyer(string username, string passwordHash, string name, string surname, string phonenumber, string address, DateTime dateofbirth, bool mode)
         {
             ShopCartService sc = new ShopCartService();
 
@@ -53,8 +53,12 @@ namespace AppBLL.Services
             };
             db.Buyer.Add(new_buyer);
             db.SaveChanges();
-            UserVM.Id = new_buyer.Id;
-            UserVM.Role = new_buyer.Role;
+            if (mode)
+            {
+                UserVM.Id = new_buyer.Id;
+                UserVM.Role = new_buyer.Role;
+            }
+            
 
 
 
@@ -90,7 +94,7 @@ namespace AppBLL.Services
         {
             List<BuyerVM> buyerVMs = new List<BuyerVM>();
 
-            var buyer = db.Buyer.OrderBy(p => p.Id)
+            var buyer = db.Buyer.OrderBy(p => p.Login)
                                .Skip(start_items)
                                .Take(amount_items)
                                .ToList();
@@ -115,9 +119,33 @@ namespace AppBLL.Services
             return buyerVMs;
 
         }
+        /// <summary>
+        /// Метод подсчета количества строк в таблице
+        /// </summary>
+        /// <returns>
+        /// возращает int [количество строк]
+        /// </returns>
         public int GetNumbOfItem()
         {
             return db.Buyer.Count();
+        }
+
+        /// <summary>
+        /// Поиск совпадения по Логину. 
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>TRUE - Совпадение</returns>
+        public bool SearchBuyer(string username)
+        {
+            var loginList = (from t in db.Buyer
+                            select t.Login).ToList();
+            foreach (var i in loginList) 
+            {
+                if (i == username) { return true; }
+            
+            }
+            return false; 
+            
         }
     }
 }

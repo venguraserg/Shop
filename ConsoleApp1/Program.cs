@@ -17,7 +17,6 @@ namespace AppUI
             Console.WriteLine("Добро пожаловать в ИНТЕРНЕТ МАГАЗИН");
             Console.WriteLine("===================================");
             Console.WriteLine("Для продолжения нажмите любую кнопку");
-            //Console.WriteLine("a".GetHashCode().ToString());
             Console.ReadKey();
             Console.Clear();
 
@@ -28,7 +27,6 @@ namespace AppUI
                 switch (UserVM.Role)
                 {
                     case "manager":
-                        Console.WriteLine($"Вы вошли как {UserVM.Role}");
                         do
                         {
                             ConsoleHelper.Menu_manager();
@@ -38,8 +36,7 @@ namespace AppUI
                         break;
 
                     case "buyer":
-                        Console.WriteLine($"Вы вошли как {UserVM.Role}");
-                        do
+                       do
                         {
                             ConsoleHelper.Menu_buyer();
                         }
@@ -48,7 +45,6 @@ namespace AppUI
                         break;
 
                     case "admin":
-                        Console.WriteLine($"Вы вошли как {UserVM.Role}");
                         do
                         {
                             ConsoleHelper.Menu_admin();
