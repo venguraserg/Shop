@@ -11,7 +11,9 @@ namespace AppBLL.Interfaces
     {
         void AddUnit(string Name);
         int GetNumbOfItem();
-        List<UnitVM> GetPageUnitInfo(int start_items, int amount_items);
+        List<UnitVM> GetPageInfo(int start_items, int amount_items);
+        UnitVM GetUnit(Guid Id);
+        void UpdateUnit(Guid id, string name);
     }
 
 }

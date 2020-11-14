@@ -18,7 +18,7 @@ namespace AppBLL.VMs
         public DateTime DateOfRegister { get; set; }
         public override string ToString()
         {
-            return $"Login: {Login},\t Name: {Name},\t Surname: {Surname},\t PhoneNunber: {PhoneNumber},\t Address: {Address},\t Date of birth {DateOfBirth.Date},\t Date of register {DateOfRegister.Date} ";
+            return $"Login: {Login},\t Name: {Name}, \tSurname: {Surname}";
         }
 
     }

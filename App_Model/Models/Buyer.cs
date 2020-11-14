@@ -40,11 +40,11 @@ namespace App_Model.Models
         [StringLength(256)]
         public string Address { get; set; }
 
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
-        public DateTime? DateOfRegister { get; set; }
+        public DateTime DateOfRegister { get; set; }
 
-        public Guid? ShoppingCartId { get; set; }
+        public Guid ShoppingCartId { get; set; }
 
         public virtual ShoppingCart ShoppingCart { get; set; }
 

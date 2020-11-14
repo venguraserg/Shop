@@ -22,7 +22,7 @@ namespace AppBLL.VMs
         //public Guid? UnitId { get; set; }
         public override string ToString()
         {
-            return Name;
+            return $"{Name}\t\tЦена:{Price}";
         }
     }
 }

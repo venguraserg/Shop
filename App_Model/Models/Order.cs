@@ -20,9 +20,9 @@ namespace App_Model.Models
 
         public DateTime? DateOfOrder { get; set; }
 
-        public Guid? BuyerId { get; set; }
+        public Guid BuyerId { get; set; }
 
-        public Guid? ProductId { get; set; }
+        public Guid ProductId { get; set; }
 
         public virtual Buyer Buyer { get; set; }
 

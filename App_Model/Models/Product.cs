@@ -25,13 +25,13 @@ namespace App_Model.Models
         [StringLength(200)]
         public string Description { get; set; }
 
-        public float? Amount { get; set; }
+        public float Amount { get; set; }
 
-        public decimal? Price { get; set; }
+        public decimal Price { get; set; }
 
-        public Guid? ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
-        public Guid? UnitId { get; set; }
+        public Guid UnitId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Order { get; set; }

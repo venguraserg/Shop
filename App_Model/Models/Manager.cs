@@ -36,7 +36,7 @@ namespace App_Model.Models
         [StringLength(20)]
         public string PhoneNumber { get; set; }
 
-        public Guid? ShopId { get; set; }
+        public Guid ShopId { get; set; }
 
         public virtual Shop Shop { get; set; }
 

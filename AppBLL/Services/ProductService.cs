@@ -36,7 +36,7 @@ namespace AppBLL.Services
             return db.Product.Count();
         }
 
-        public List<ProductVM> GetPageProductInfo(int start_items, int amount_items)
+        public List<ProductVM> GetPageInfo(int start_items, int amount_items)
         {
             List<ProductVM> prodVMs = new List<ProductVM>();
 
@@ -52,6 +52,43 @@ namespace AppBLL.Services
 
             }
             return prodVMs;
+        }
+
+        public ProductVM GetProduct(Guid Id)
+        {
+            var product = db.Product.Find(Id);
+            if (product == null) { return null; }
+            var item = new ProductVM()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Amount = product.Amount,
+                Description = product.Description,
+                Price = product.Price
+            };
+            return item;
+        }
+
+        public void UpdateProduct(Guid id, string name, string description, float amount, decimal price, Guid shopId, Guid unitId)
+        {
+            var product = db.Product.Find(id);
+            product.Name = name;
+            product.Description = description;
+            product.Amount = amount;
+            product.Price = price;
+            product.ShopId = shopId;
+            product.UnitId = unitId;
+
+            db.SaveChanges();
+        }
+
+        public bool DeleteProduct(Guid Id)
+        {
+            var product = db.Product.Find(Id);
+            if (product == null) { return false; }
+            db.Product.Remove(product);
+            db.SaveChanges();
+            return true;
         }
     }
 }

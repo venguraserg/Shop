@@ -12,12 +12,13 @@ namespace AppBLL.Interfaces
         //Create Создание нового магазина
         void RegisterNewShop(string shopname, string discription);
         //Read Получение списка магазинов
-        List<ShopVM> GetPageShopInfo(int start_items, int amount_items);
+        List<ShopVM> GetPageInfo(int start_items, int amount_items);
         string FindShop(Guid Id);
-        int GetNumbOfItemShop();
+        int GetNumbOfItem();
+        ShopVM GetShop(Guid Id);
 
         //Update Обновление данных по магазину
-        void UpdateShop();
+        void UpdateShop(Guid id, string shopname, string discription);
         //Delete удаление магазина
         bool DeleteShop(Guid Id);
     }

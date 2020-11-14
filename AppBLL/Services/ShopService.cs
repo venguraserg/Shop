@@ -44,11 +44,11 @@ namespace AppBLL.Services
             else
                 return shop.Name;
         }
-        public int GetNumbOfItemShop()
+        public int GetNumbOfItem()
         {
             return db.Shop.Count();
         }
-        public List<ShopVM> GetPageShopInfo(int start_items, int amount_items)
+        public List<ShopVM> GetPageInfo(int start_items, int amount_items)
         {
             List<ShopVM> shopVMs = new List<ShopVM>();
 
@@ -68,9 +68,26 @@ namespace AppBLL.Services
         }
 
 
-        public void UpdateShop()
+        public void UpdateShop(Guid id, string shopname, string discription)
         {
-            throw new NotImplementedException();
+            var shop = db.Shop.Find(id);
+            shop.Name = shopname;
+            shop.Discription = discription;
+            db.SaveChanges();
+        }
+
+        public ShopVM GetShop(Guid Id)
+        {
+            var shop = db.Shop.Find(Id);
+            if (shop == null) { return null; }
+            var item = new ShopVM()
+            {
+                Id = shop.Id,
+                Name = shop.Name,
+                Description = shop.Discription
+
+            };
+            return item;
         }
     }
 }

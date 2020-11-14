@@ -31,7 +31,7 @@ namespace AppBLL.Services
             return db.Unit.Count();
         }
 
-        public List<UnitVM> GetPageUnitInfo(int start_items, int amount_items)
+        public List<UnitVM> GetPageInfo(int start_items, int amount_items)
         {
             List<UnitVM> unitVMs = new List<UnitVM>();
 
@@ -50,5 +50,25 @@ namespace AppBLL.Services
 
         }
 
+        public UnitVM GetUnit(Guid Id)
+        {
+            var unit = db.Unit.Find(Id);
+            if (unit == null) { return null; }
+            var item = new UnitVM()
+            {
+                Id = unit.Id,
+                Name = unit.Name,
+              
+            };
+            return item;
+        }
+
+        public void UpdateUnit(Guid id, string name)
+        {
+            var unit = db.Unit.Find(id);
+            unit.Name = name;
+            
+            db.SaveChanges();
+        }
     }
 }

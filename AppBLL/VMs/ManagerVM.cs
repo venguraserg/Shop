@@ -17,7 +17,7 @@ namespace AppBLL.VMs
 
         public override string ToString()
         {
-            return $"Login: {Login},\t Name: {Name},\t Surname: {Surname},\t PhoneNunber: {PhoneNumber},\t Shop: {Shop}";
+            return $"Login: {Login},\t Name: {Name},\t\t Shop: {Shop}";
         }
 
     }

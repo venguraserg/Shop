@@ -17,12 +17,13 @@ namespace AppBLL.Services
         {
             db = new MyShopDbContext();
         }
-        public void DeleteBuyer(Guid id)
+        public bool DeleteBuyer(Guid id)
         {
             var buyer = db.Buyer.Find(id);
-            if (buyer == null) { return; }
+            if (buyer == null) { return false; }
             db.Buyer.Remove(buyer);
             db.SaveChanges();
+            return true;
         }
 
         public bool LogInBuyer(string username, string passwordHash)
@@ -34,7 +35,17 @@ namespace AppBLL.Services
             return true;
 
         }
-
+        /// <summary>
+        /// Регистрация нового пользователя
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="passwordHash"></param>
+        /// <param name="name"></param>
+        /// <param name="surname"></param>
+        /// <param name="phonenumber"></param>
+        /// <param name="address"></param>
+        /// <param name="dateofbirth"></param>
+        /// <param name="mode">после рестрации входим под новым пользователем True - да/False - нет</param>
         public void RegisterNewBuyer(string username, string passwordHash, string name, string surname, string phonenumber, string address, DateTime dateofbirth, bool mode)
         {
             ShopCartService sc = new ShopCartService();
@@ -90,7 +101,7 @@ namespace AppBLL.Services
             }
             return buyerVMs;
         }
-        public List<BuyerVM> GetPageBuyerInfo(int start_items, int amount_items)
+        public List<BuyerVM> GetPageInfo(int start_items, int amount_items)
         {
             List<BuyerVM> buyerVMs = new List<BuyerVM>();
 
@@ -146,6 +157,39 @@ namespace AppBLL.Services
             }
             return false; 
             
+        }
+
+        public void UpdateBuyer(Guid id, string username, string passwordHash, string name, string surname, string phonenumber, string address, DateTime dateofbirth)
+        {
+            var buyer = db.Buyer.Find(id);
+            buyer.Login = username;
+            buyer.PasswordHash = passwordHash;
+            buyer.Name = name;
+            buyer.Surname = surname;
+            buyer.PhoneNumber = phonenumber;
+            buyer.Address = address;
+            buyer.DateOfBirth = dateofbirth;
+            db.SaveChanges();
+
+        }
+
+        public BuyerVM GetBuyer(Guid Id)
+        {
+            var buyer = db.Buyer.Find(Id);
+            if (buyer == null) { return null; }
+            var item = new BuyerVM()
+            {
+                Id = buyer.Id,
+                Login = buyer.Login,
+                Name = buyer.Name,
+                Surname = buyer.Surname,
+                PhoneNumber = buyer.PhoneNumber,
+                Address = buyer.Address,
+                DateOfBirth = buyer.DateOfBirth,
+                DateOfRegister = buyer.DateOfRegister
+
+            };
+            return item;
         }
     }
 }

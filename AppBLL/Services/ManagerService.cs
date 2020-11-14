@@ -89,7 +89,7 @@ namespace AppBLL.Services
             return db.Manager.Count();
         }
 
-        public List<ManagerVM> GetPageManagerInfo(int start_items, int amount_items)
+        public List<ManagerVM> GetPageInfo(int start_items, int amount_items)
         {
             List<ManagerVM> managersVMs = new List<ManagerVM>();
 
@@ -116,14 +116,43 @@ namespace AppBLL.Services
             return managersVMs;
 
         }
-        public void DeleteManager(Guid id)
+        public bool DeleteManager(Guid id)
         {
             var manager = db.Manager.Find(id);
-            if (manager == null) { return; }
+            if (manager == null) { return false; }
             db.Manager.Remove(manager);
             db.SaveChanges();
+            return true;
         }
 
-        
+        public ManagerVM GetManager(Guid Id)
+        {
+            var manager = db.Manager.Find(Id);
+            if (manager == null) { return null; }
+            var item = new ManagerVM()
+            {
+                Id = manager.Id,
+                Login = manager.Login,
+                Name = manager.Name,
+                Surname = manager.Surname,
+                PhoneNumber = manager.PhoneNumber,
+                Shop = new ShopService().FindShop((Guid)manager.ShopId)
+
+            };
+            return item;
+        }
+
+        public void UpdateManager(Guid id, string login, string passHash, string name, string surname, string phonenumber, Guid shopId)
+        {
+            var manager = db.Manager.Find(id);
+            manager.Login = login;
+            manager.PasswordHash = passHash;
+            manager.Name = name;
+            manager.Surname = surname;
+            manager.PhoneNumber = phonenumber;
+            manager.ShopId = shopId;
+            db.SaveChanges();
+
+        }
     }
 }

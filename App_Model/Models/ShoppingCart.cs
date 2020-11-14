@@ -19,7 +19,7 @@ namespace App_Model.Models
 
         public Guid Id { get; set; }
 
-        public int? Capacity { get; set; }
+        public int Capacity { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Buyer> Buyer { get; set; }
