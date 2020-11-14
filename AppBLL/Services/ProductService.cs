@@ -64,7 +64,11 @@ namespace AppBLL.Services
                 Name = product.Name,
                 Amount = product.Amount,
                 Description = product.Description,
-                Price = product.Price
+                Price = product.Price,
+                Shop = product.Shop.Name,
+                Unit = product.Unit.Name
+
+
             };
             return item;
         }

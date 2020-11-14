@@ -23,6 +23,7 @@ namespace AppDAL
         public virtual DbSet<Shop> Shop { get; set; }
         public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
         public virtual DbSet<Unit> Unit { get; set; }
+        public virtual DbSet<Discount> Discount { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

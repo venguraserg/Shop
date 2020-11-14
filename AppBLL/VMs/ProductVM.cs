@@ -17,12 +17,12 @@ namespace AppBLL.VMs
 
         public decimal Price { get; set; }
 
-        //public Guid? ShopId { get; set; }
+        public string Shop { get; set; }
 
-        //public Guid? UnitId { get; set; }
+        public string Unit { get; set; }
         public override string ToString()
         {
-            return $"{Name}\t\tЦена:{Price}";
+            return Name;
         }
     }
 }

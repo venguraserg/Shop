@@ -305,8 +305,8 @@ namespace ConsoleApp1
             Console.WriteLine("1 => Добавить новый продукт в каталог\n" +
                               "2 => Редактировать продукт\n" +
                               "3 => Удалить продукт\n" +
-                              "4 => Посмотреть список продуктов в каталоге" +
-                              "5 => Посмотреть подробную информацию о продукте" +
+                              "4 => Посмотреть список продуктов в каталоге\n" +
+                              "5 => Посмотреть подробную информацию о продукте\n" +
                               "9 => Выйти из аккаунта\n" +
                               "10 => Выйти из программы");
             if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
@@ -363,6 +363,16 @@ namespace ConsoleApp1
                     EntityView<ProductVM>(productService.GetPageInfo, productService.GetNumbOfItem(), 10);
                     break;
                 case 5:
+                    var temp_product = productService.GetProduct(EntitySelection<ProductVM>(productService.GetPageInfo, productService.GetNumbOfItem(), 10).Value);
+                    Console.Clear();
+                    Console.WriteLine("***** ДЕТАЛЬНОЕ ОПИСАНИЕ ПРОДУКТА *****");
+                    Console.WriteLine($"Имя:        {temp_product.Name}\n" +
+                                      $"Описание:   {temp_product.Description}\n" +
+                                      $"Цена:       {temp_product.Price}\n" +
+                                      $"Количество: {temp_product.Amount} {temp_product.Unit}\n" +
+                                      $"Магазин:    {temp_product.Shop}\n" +
+                                      $"\n\nДля продолжения нажмите любую клавишу...");
+                    Console.ReadKey();
                     break;
                 case 6:
                     break;

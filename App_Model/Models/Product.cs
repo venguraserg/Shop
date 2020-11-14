@@ -29,18 +29,39 @@ namespace App_Model.Models
 
         public decimal Price { get; set; }
 
-        public Guid ShopId { get; set; }
+        
+        public Category? Category { get; set; }
 
-        public Guid UnitId { get; set; }
+        public Guid? ShopId { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public Guid? UnitId { get; set; }
+
+        public Guid? DiscountId { get; set; }
+
+        
         public virtual ICollection<Order> Order { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<OrderItem> OrderItem { get; set; }
 
         public virtual Shop Shop { get; set; }
 
         public virtual Unit Unit { get; set; }
+
+        public virtual Discount Discount { get; set; }
+
+
+
+
+
     }
+    public enum Category 
+    {
+        food = 1, //food
+        gadget,     //gadget
+        category_3,
+        category_4
+
+    }
+
 }
