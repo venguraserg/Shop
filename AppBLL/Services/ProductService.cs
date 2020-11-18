@@ -65,13 +65,23 @@ namespace AppBLL.Services
                 Amount = product.Amount,
                 Description = product.Description,
                 Price = product.Price,
-                Shop = product.Shop.Name,
-                Unit = product.Unit.Name
+                //Shop = product.Shop.Name,
+                //Unit = product.Unit.Name
 
 
             };
             return item;
         }
+
+        public string FindProduct(Guid Id)
+        {
+            var product = db.Product.Find(Id);
+            if (product == null)
+                return "no data";
+            else
+                return product.Name;
+        }
+
 
         public void UpdateProduct(Guid id, string name, string description, float amount, decimal price, Guid shopId, Guid unitId)
         {

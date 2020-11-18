@@ -9,7 +9,7 @@ namespace App_Model.Models
     [Table("Order")]
     public partial class Order
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        
         public Order()
         {
             Id = Guid.NewGuid();
@@ -28,7 +28,7 @@ namespace App_Model.Models
 
         public virtual Product Product { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        
         public virtual ICollection<OrderItem> OrderItem { get; set; }
     }
 }

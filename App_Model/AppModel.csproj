@@ -61,6 +61,7 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Shop.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
+    <Compile Include="Models\ShoppingCartItem.cs" />
     <Compile Include="Models\Unit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

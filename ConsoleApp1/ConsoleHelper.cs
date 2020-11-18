@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApp1
 {
@@ -17,7 +15,7 @@ namespace ConsoleApp1
         static IManagerService managerService = new ManagerService();
         static IUnitService unitService = new UnitService();
         static IProductService productService = new ProductService();
-
+        static IShopCartService shopCartService = new ShopCartService(); 
 
         /// <summary>
         /// Метод Авторизации. Закончен
@@ -265,18 +263,70 @@ namespace ConsoleApp1
             Console.Clear();
             Console.WriteLine($"{UserVM.Role} пожалуйста выбеите пункт МЕНЮ");
             Console.WriteLine("===========================================");
-            Console.WriteLine("1 => -----\n" +
-                              "2 => -----\n" +
-                              "5 => Выйти из аккаунта\n" +
-                              "6 => Выйти из программы");
+            Console.WriteLine("1 => Посмотреть список продуктов в каталоге\n" +
+                              "2 => Посмотреть подробную информацию о продукте\n" +
+                              "3 => Посмотреть корзину\n" +
+                              "4\n" +
+                              "5\n" +
+                              "6 => Выйти из аккаунта\n" +
+                              "7 => Выйти из программы");
             if (!int.TryParse(Console.ReadLine(), out int key)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
             switch (key)
             {
                 case 1:
+                    EntityView<ProductVM>(productService.GetPageInfo, productService.GetNumbOfItem(), 10);
                     break;
                 case 2:
+                    Console.Clear();
+                    var temp_product = productService.GetProduct(EntitySelection<ProductVM>(productService.GetPageInfo, productService.GetNumbOfItem(), 10).Value);
+                    Console.Clear();
+                    Console.WriteLine("***** ДЕТАЛЬНОЕ ОПИСАНИЕ ПРОДУКТА *****");
+                    Console.WriteLine($"Имя:        {temp_product.Name}\n" +
+                                      $"Описание:   {temp_product.Description}\n" +
+                                      $"Цена:       {temp_product.Price}\n" +
+                                      $"Количество: {temp_product.Amount} {temp_product.Unit}\n" +
+                                      $"Магазин:    {temp_product.Shop}\n" +
+                                      $"\n\nВернутмя назад - 0\n" +
+                                      $"Добавить товар в корзину - 1");
+                    int key1;
+                    do
+                    {
+                        if (!int.TryParse(Console.ReadLine(), out  key1)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                        if (!(key1 == 1 || key1 == 0)) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+                    }
+                    while (!(key1 == 1 || key1 == 0));
+                    
+                    switch (key1)
+                    {
+                        case 0:
+                            break;
+                        case 1:
+                            Console.WriteLine("Выберте количество");
+                            float temp_amount;
+                            bool parse_result;
+                            do
+                            {
+                                parse_result = float.TryParse(Console.ReadLine(), out temp_amount);
+                                if (!parse_result) Console.WriteLine("-----------ВВЕДЕНЫ НЕДОПУСТИМЫЕ СИМВОЛЫ------------");
+
+                            } while (!parse_result);
+
+                            shopCartService.AddInShopCart(shopCartService.GetShopCart(UserVM.Id), temp_product.Id, temp_amount, temp_product.Price);
+
+                            break;
+                    }
                     break;
+                    // просмотр корзины
                 case 3:
+                    Console.Clear();
+                    //EntityView<ShopCartItemVM>(shopCartService.GetPageInfo, shopCartService.GetNumbOfItem(), 10);
+                    var shopCartItems = shopCartService.GetAllItems(shopCartService.GetShopCart(UserVM.Id));
+                    Console.WriteLine("Ваша Корзина");
+                    foreach (var i in shopCartItems) 
+                    {
+                        Console.WriteLine(i);
+                    }
+                    Console.ReadKey();
                     break;
                 case 4:
                     break;

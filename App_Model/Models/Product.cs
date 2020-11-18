@@ -43,6 +43,7 @@ namespace App_Model.Models
 
         
         public virtual ICollection<OrderItem> OrderItem { get; set; }
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItem { get; set; }
 
         public virtual Shop Shop { get; set; }
 
@@ -50,7 +51,7 @@ namespace App_Model.Models
 
         public virtual Discount Discount { get; set; }
 
-
+        
 
 
 

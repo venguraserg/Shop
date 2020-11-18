@@ -16,5 +16,6 @@ namespace AppBLL.Interfaces
         ProductVM GetProduct(Guid Id);
         void UpdateProduct(Guid id, string name, string description, float amount, decimal price, Guid shopId, Guid unitId);
         bool DeleteProduct(Guid Id);
+        string FindProduct(Guid Id);
     }
 }

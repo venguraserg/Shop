@@ -26,5 +26,6 @@ namespace App_Model.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderItem> OrderItem { get; set; }
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItem { get; set; }
     }
 }

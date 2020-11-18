@@ -69,6 +69,7 @@
     <Compile Include="VMs\BuyerVM.cs" />
     <Compile Include="VMs\ManagerVM.cs" />
     <Compile Include="VMs\ProductVM.cs" />
+    <Compile Include="VMs\ShopCartItemVM.cs" />
     <Compile Include="VMs\ShopVM.cs" />
     <Compile Include="VMs\UnitVM.cs" />
     <Compile Include="VMs\UserVM.cs" />
