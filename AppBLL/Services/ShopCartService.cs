@@ -47,37 +47,52 @@ namespace AppBLL.Services
              
         }
 
-        //public List<ShopCartItemVM> GetPageInfo(int start_items, int amount_items)
-        //{
-        //    List<ShopCartItemVM> shopVMs = new List<ShopCartItemVM>();
+        public List<ShopCartItemVM> GetPageInfo(int start_items, int amount_items, Guid shopCartId)
+        {
+            List<ShopCartItemVM> sciVMs = new List<ShopCartItemVM>();
 
-        //    var shops = db.Shop.OrderBy(p => p.Name)
-        //                       .Skip(start_items)
-        //                       .Take(amount_items)
-        //                       .ToList();
+            var scis = db.ShoppingCartItem
+                               .Where(m => m.ShoppingCartId == shopCartId)
+                               .OrderBy(p => p.Id)
+                               .Skip(start_items)
+                               .Take(amount_items)
+                               .ToList();
 
-        //    for (var i = 0; i < shops.Count(); i++)
-        //    {
-        //        var item = new ShopCartItemVM() { Id = shops[i].Id, Name = shops[i].Name, Description = shops[i].Discription };
-        //        shopVMs.Add(item);
+            for (var i = 0; i < scis.Count(); i++)
+            {
+                var item = new ShopCartItemVM() 
+                {
+                    Id = scis[i].Id,
+                    Amount = scis[i].Amount,
 
-        //    }
-        //    return shopVMs;
+                    Product = new ProductService().FindProduct(scis[i].ProductId.Value),
+                    Price = scis[i].Price,
 
-        //}
-        //public int GetNumbOfItem(Guid userId)
-        //{
-        //    var items = db.ShoppingCartItem.Find()
 
-        //    return db.ShoppingCartItem.Count();
-        //}
+                };
+                sciVMs.Add(item);
+
+            }
+            return sciVMs;
+
+        }
+
+
+        public int GetNumbOfItem(Guid shopCartId)
+        {
+            
+            var items = (from t in db.ShoppingCartItem
+                         .Where(m => m.ShoppingCartId == shopCartId)
+                         select t);
+            return items.Count();
+        }
         public List<ShopCartItemVM> GetAllItems(Guid shopCartId)
         {
             List<ShopCartItemVM> itemsVMs = new List<ShopCartItemVM>();
 
             var items = (from t in db.ShoppingCartItem
-                                     .Where(m => m.ShoppingCartId == shopCartId)
-                                     select t).ToList();
+                        .Where(m => m.ShoppingCartId == shopCartId)
+                         select t).ToList();
 
             for (var i = 0; i < items.Count(); i++)
             {

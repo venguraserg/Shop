@@ -15,6 +15,8 @@ namespace AppBLL.Interfaces
         //Read
         Guid GetShopCart(Guid userId);
         List<ShopCartItemVM> GetAllItems(Guid shopCartId);
+        int GetNumbOfItem(Guid shopCartId);
+        List<ShopCartItemVM> GetPageInfo(int start_items, int amount_items, Guid shopCartId);
         //Update
         //Delete
 

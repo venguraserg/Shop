@@ -319,13 +319,15 @@ namespace ConsoleApp1
                     // просмотр корзины
                 case 3:
                     Console.Clear();
-                    //EntityView<ShopCartItemVM>(shopCartService.GetPageInfo, shopCartService.GetNumbOfItem(), 10);
+                    //EntityView<ShopCartItemVM>(shopCartService.GetPageInfo(shopCartService.GetShopCart(UserVM.Id), shopCartService.GetNumbOfItem(shopCartService.GetShopCart(UserVM.Id)), 10);
                     var shopCartItems = shopCartService.GetAllItems(shopCartService.GetShopCart(UserVM.Id));
                     Console.WriteLine("Ваша Корзина");
                     foreach (var i in shopCartItems) 
                     {
                         Console.WriteLine(i);
                     }
+
+
                     Console.ReadKey();
                     break;
                 case 4:
